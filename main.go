@@ -7,7 +7,9 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 
+	"github.com/adrg/frontmatter"
 	img64 "github.com/tenkoh/goldmark-img64"
 	"github.com/yuin/goldmark"
 	highlighting "github.com/yuin/goldmark-highlighting/v2"
@@ -45,8 +47,13 @@ func (fr FileReader) Read(slug string) (string, error) {
 
 type PostData struct {
 	Content template.HTML
-	Author  string
-	Title   string
+	Title   string `toml:"title"`
+	Author  Author `toml:"author"`
+}
+
+type Author struct {
+	Name  string `toml:"name"`
+	Email string `toml:"email"`
 }
 
 func PostHandler(sl SlugReader, tpl *template.Template) http.HandlerFunc {
@@ -73,18 +80,22 @@ func PostHandler(sl SlugReader, tpl *template.Template) http.HandlerFunc {
 			http.Error(w, "Post not found", http.StatusNotFound)
 			return
 		}
+
+		var post PostData
+		remainingMd, err := frontmatter.Parse(strings.NewReader(postMarkdown), &post)
+		if err != nil {
+			http.Error(w, "Error parsing frontmatter", http.StatusInternalServerError)
+			return
+		}
+
 		var buf bytes.Buffer
-		err = mdRebderer.Convert([]byte(postMarkdown), &buf)
+		err = mdRebderer.Convert([]byte(remainingMd), &buf)
 		if err != nil {
 			panic(err)
 		}
+		post.Content = template.HTML(buf.String())
 
-		err = tpl.Execute(w, PostData{
-			Content: template.HTML(buf.String()),
-			Author:  "Austin",
-			Title:   "Test Blog",
-		})
-
+		err = tpl.Execute(w, post)
 		if err != nil {
 			http.Error(w, "Error ecxecuting template", http.StatusInternalServerError)
 			return

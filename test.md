@@ -1,4 +1,4 @@
----
++++
 title = "Test Title"
 description = "This is a test md file"
 date = 2024-01-03
@@ -7,14 +7,8 @@ date = 2024-01-03
 name = "Austin"
 email = "test@gmail.com"
 +++
----
 
-
-# Title Block here
-
-this is a sample markdown file.
-
-## List block
+# List block
 
 - list item 1
 - list item 2
