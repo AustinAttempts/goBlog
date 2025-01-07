@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Linux Terminal Mock</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="terminal">
+        <div class="header">
+            <div class="close"></div>
+            <div class="minimize"></div>
+            <div class="maximize"></div>
+        </div>
+        <div class="content">
+            <span class="path">~/Austin-Attempts/</span>
+            <span id="typing"></span>
+            <div class="cursor"></div>
+        </div>
+    </div>
+
+    <script>
+        const words = [
+            '<span class="keyword">for</span> (let i = 0; i &lt; 10; i++) {',
+            '<span class="function">console.log</span>(<span class="string">"Hello World"</span>);',
+            '}',
+            '<span class="variable">const</span> name = <span class="string">"Linux Terminal"</span>;',
+            '<span class="function">fetch</span>(<span class="string">"/api"</span>)'
+        ];
+        const typingElement = document.getElementById("typing");
+
+        function getRandomWord() {
+            const randomIndex = Math.floor(Math.random() * words.length);
+            return words[randomIndex];
+        }
+
+        function typeWord(word, callback) {
+            let index = 0;
+            const typingSpeed = 150;
+            const typingInterval = setInterval(() => {
+                typingElement.innerHTML += word[index];
+                index++;
+                if (index === word.length) {
+                    clearInterval(typingInterval);
+                    setTimeout(() => callback(word), 3000); // Pause for 3 seconds before deleting
+                }
+            }, typingSpeed);
+        }
+
+        function deleteWord(word, callback) {
+            let index = word.length;
+            const deletingSpeed = 100;
+            const deletingInterval = setInterval(() => {
+                typingElement.innerHTML = typingElement.innerHTML.slice(0, -1);
+                index--;
+                if (index === 0) {
+                    clearInterval(deletingInterval);
+                    setTimeout(callback, 1000); // Pause for 1 second before typing next word
+                }
+            }, deletingSpeed);
+        }
+
+        function startTypingCycle() {
+            const word = getRandomWord();
+            typeWord(word, (word) => {
+                deleteWord(word, startTypingCycle);
+            });
+        }
+
+        // Start the typing cycle
+        setTimeout(startTypingCycle, 1000); // Initial delay before starting
+    </script>
+</body>
+</html>
