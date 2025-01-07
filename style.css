@@ -15,7 +15,7 @@ body {
     border: 1px solid #333;
     border-radius: 15px;
     overflow: hidden;
-    width: 600px;
+    width: 700px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
 }
 
@@ -48,22 +48,30 @@ body {
 
 .terminal .content {
     white-space: nowrap;
-    font-size: 16px;
-    line-height: 1.2;
+    font-size: 20px;
+    line-height: 1.5;
     text-align: left;
-    padding: 10px;
+    padding: 15px;
     background-color: #1c1c1c;
     color: #c8c8c8;
     display: flex;
     align-items: center;
 }
 
+.terminal .content .path {
+    color: #4caf50; /* Green for path */
+}
+
 .terminal .content .cursor {
     width: 8px;
-    height: 16px;
+    height: 20px;
     background-color: #c8c8c8;
     margin-left: 2px;
     animation: blink 1s step-start infinite;
+}
+
+.highlight {
+    color: #ff79c6; /* Highlight color for random words */
 }
 
 @keyframes blink {
