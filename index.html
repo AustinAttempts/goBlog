@@ -20,6 +20,11 @@
         </div>
     </div>
 
+    <div class="search-box">
+        <input type="text" id="searchInput" placeholder="Search blog posts..." />
+        <button id="searchButton">Search</button>
+    </div>
+
     <script>
         const words = ["Coding", "Engineering", "Reading", "Golfing", "Placeholder"];
         const typingElement = document.getElementById("typing");
@@ -28,7 +33,6 @@
         let deletingInterval;
 
         function applyHighlighting(word) {
-            // Wrap the word in a span with the "highlight" class
             return `<span class="highlight">${word}</span>`;
         }
 
@@ -37,14 +41,13 @@
             const typingSpeed = 150;
 
             typingInterval = setInterval(() => {
-                // Add one character at a time
                 typingElement.textContent += word[index];
                 index++;
 
                 if (index === word.length) {
                     clearInterval(typingInterval);
-                    typingElement.innerHTML = applyHighlighting(word); // Apply highlighting after typing
-                    setTimeout(() => callback(word), 3000); // Pause before deleting
+                    typingElement.innerHTML = applyHighlighting(word);
+                    setTimeout(() => callback(word), 3000);
                 }
             }, typingSpeed);
         }
@@ -54,13 +57,12 @@
             const deletingSpeed = 100;
 
             deletingInterval = setInterval(() => {
-                // Remove one character at a time
                 typingElement.textContent = word.substring(0, index - 1);
                 index--;
 
                 if (index === 0) {
                     clearInterval(deletingInterval);
-                    setTimeout(callback, 1000); // Pause before typing the next word
+                    setTimeout(callback, 1000);
                 }
             }, deletingSpeed);
         }
@@ -74,8 +76,17 @@
             });
         }
 
-        // Start the typing cycle
         setTimeout(startTypingCycle, 1000);
+
+        // Search box functionality
+        const searchButton = document.getElementById("searchButton");
+        const searchInput = document.getElementById("searchInput");
+
+        searchButton.addEventListener("click", function () {
+            const query = searchInput.value.toLowerCase();
+            alert("You searched for: " + query);
+            // You can implement an actual search functionality here (e.g., filtering blog posts based on the query)
+        });
     </script>
 </body>
 </html>
