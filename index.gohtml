@@ -2,46 +2,249 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Austin Attempts ______</title>
-  <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Austin Attempts</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+
+    <!-- Custom Styles -->
+    <style>
+        /* General body styling */
+        body {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 20px;
+        }
+
+        /* Scoped styles for terminal to prevent conflicts with Tailwind Typography */
+        .terminal {
+            background-color: #1c1c1c;
+            border: 1px solid #333;
+            border-radius: 15px;
+            overflow: hidden;
+            width: 700px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+            margin: 0 auto;
+        }
+
+        .terminal .header {
+            display: flex;
+            justify-content: start;
+            gap: 8px;
+            padding: 10px;
+            background-color: #f5f5f5;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .terminal .header div {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .terminal .header .close {
+            background-color: #ff5f57;
+        }
+
+        .terminal .header .minimize {
+            background-color: #ffbd2e;
+        }
+
+        .terminal .header .maximize {
+            background-color: #28c940;
+        }
+
+        .terminal .content {
+            white-space: nowrap;
+            font-size: 20px;
+            line-height: 1.5;
+            text-align: left;
+            padding: 15px;
+            background-color: #1c1c1c;
+            color: #c8c8c8;
+            display: flex;
+            align-items: center;
+        }
+
+        .terminal .content .path {
+            color: #4caf50;
+        }
+
+        .terminal .content .cursor {
+            width: 8px;
+            height: 20px;
+            background-color: #c8c8c8;
+            margin-left: 2px;
+            animation: blink 1s step-start infinite;
+        }
+
+        /* Highlighted words */
+        .highlight {
+            color: #ff79c6;
+        }
+
+        /* Scoped styles for the search box */
+        .search-box {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        #searchInput {
+            padding: 10px;
+            font-size: 16px;
+            border: 2px solid #333;
+            border-radius: 5px;
+            background-color: #2c2c2c;
+            color: #c8c8c8;
+            width: 300px;
+        }
+
+        #searchButton {
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            background-color: #4caf50;
+            color: white;
+            cursor: pointer;
+        }
+
+        #searchButton:hover {
+            background-color: #45a049;
+        }
+
+        @keyframes blink {
+            50% {
+                background-color: transparent;
+            }
+        }
+    </style>
 </head>
 
 <body class="bg-gray-100">
-  <nav class="bg-gray-800">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex items-center justify-between h-16">
-        <div class="flex items-center">
-          <div class="flex-shrink-0">
-            <a href="/" class="text-white text-xl font-semibold">Home</a>
-          </div>
-          <div class="hidden md:block">
-            <div class="ml-10 flex items-baseline space-x-4">
-              <a href="/about" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">About</a>
-              <a href="/contact" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Contact</a>
+    <nav class="bg-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <a href="/" class="text-white text-xl font-semibold">Home</a>
+                    </div>
+                    <div class="hidden md:block">
+                        <div class="ml-10 flex items-baseline space-x-4">
+                            <a href="/about"
+                                class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">About</a>
+                            <a href="/contact"
+                                class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Contact</a>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
         </div>
-      </div>
-    </div>
-  </nav>
+    </nav>
 
-  <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-    <div class="px-4 py-4 sm:px-0">
-      <h1 class="text-3xl font-bold mb-8">Blog Posts</h1>
-      <ul class="">
-        {{range .Posts}}
-            <a href="/posts/{{.Slug}}" class="">
-                <li class="rounded-lg bg-white border-2 border-dashed p-4 mb-8">
-                    <h2 class="text-xl font-bold">{{.Title}}</h2>
-                    <p>{{.Description}}</p>
-                </li>
-            </a>
-        {{end}}
-      </ul>
+    <div class="terminal mt-8"> <!-- Added margin-top for space from top bar -->
+        <div class="header">
+            <div class="close"></div>
+            <div class="minimize"></div>
+            <div class="maximize"></div>
+        </div>
+        <div class="content">
+            <span class="path">~/Austin-Attempts/</span>
+            <span id="typing"></span>
+            <div class="cursor"></div>
+        </div>
     </div>
-  </div>
+
+    <div class="search-box">
+        <input type="text" id="searchInput" placeholder="Search blog posts..." />
+        <button id="searchButton">Search</button>
+    </div>
+
+    <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+        <div class="px-4 py-4 sm:px-0">
+            <h1 class="text-3xl font-bold mb-8">Blog Posts</h1>
+            <ul class="">
+                {{range .Posts}}
+                <a href="/posts/{{.Slug}}" class="">
+                    <li class="rounded-lg bg-white border-2 border-dashed p-4 mb-8">
+                        <h2 class="text-xl font-bold">{{.Title}}</h2>
+                        <p>{{.Description}}</p>
+                    </li>
+                </a>
+                {{end}}
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        const words = ["Coding", "Engineering", "Reading", "Golfing", "Placeholder"];
+        const typingElement = document.getElementById("typing");
+
+        let typingInterval;
+        let deletingInterval;
+
+        function applyHighlighting(word) {
+            return `<span class="highlight">${word}</span>`;
+        }
+
+        function typeWord(word, callback) {
+            let index = 0;
+            const typingSpeed = 150;
+
+            typingInterval = setInterval(() => {
+                typingElement.textContent += word[index];
+                index++;
+
+                if (index === word.length) {
+                    clearInterval(typingInterval);
+                    typingElement.innerHTML = applyHighlighting(word);
+                    setTimeout(() => callback(word), 3000);
+                }
+            }, typingSpeed);
+        }
+
+        function deleteWord(word, callback) {
+            let index = word.length;
+            const deletingSpeed = 100;
+
+            deletingInterval = setInterval(() => {
+                typingElement.textContent = word.substring(0, index - 1);
+                index--;
+
+                if (index === 0) {
+                    clearInterval(deletingInterval);
+                    setTimeout(callback, 1000);
+                }
+            }, deletingSpeed);
+        }
+
+        function startTypingCycle() {
+            const randomIndex = Math.floor(Math.random() * words.length);
+            const word = words[randomIndex];
+
+            typeWord(word, () => {
+                deleteWord(word, startTypingCycle);
+            });
+        }
+
+        setTimeout(startTypingCycle, 1000);
+
+        // Search box functionality
+        const searchButton = document.getElementById("searchButton");
+        const searchInput = document.getElementById("searchInput");
+
+        searchButton.addEventListener("click", function () {
+            const query = searchInput.value.toLowerCase();
+            alert("You searched for: " + query);
+            // implement an actual search functionality here (e.g., filtering blog posts based on the query)
+        });
+    </script>
+
 </body>
 
 </html>
